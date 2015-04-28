@@ -1,0 +1,60 @@
+<html>
+<meta charset="utf-8">
+<script src="jquery.js"></script>
+<script src="jquery-scoped.js"></script>
+<script>
+    var plugin1 = {
+        greenify: function greenify() {
+            return this.css( "color", "green" );
+        },
+        redify: function redify() {
+            return this.css( "color", "red" );
+        }
+    };
+
+    var plugin2 = {
+        exclaim: function exclaim() {
+            return this.append("!");
+        }
+    };
+</script>
+<body>
+
+<p>Before</p>
+
+<div id="test" style="font-weight: bold;">
+    <p>Hello</p>
+    <pre>Pre</pre>
+</div>
+
+<div id="unaffected">
+    <p>After</p>
+</div>
+
+<script>
+    $ = jQuery.scoped("#test", plugin1, plugin2);
+
+    /* Some tests
+    var v0 = $("p");
+    console.log("v0", v0, v0.constructor);
+    var v1 = v0.greenify();
+    console.log("v1", v1, v1.constructor);
+    var v2 = v1.exclaim();
+    console.log("v2", v2, v2.constructor);
+    var v3 = v2.redify();
+    console.log("v3", v3, v3.constructor);
+    */
+
+    /* Only matches inside the scope */
+    $("p").greenify().exclaim().redify();
+    $("p").on("click", function() { console.log("clicked", this); });
+    $("pre").redify().greenify();
+
+    /* Doesn't match anything */
+    $("body").css("background-color", "blue");
+
+    /* jQuery is not affected at all, this beyond scope */
+    jQuery("p").css("font-style", "italic");
+</script>
+</body>
+</html>
